@@ -1,4 +1,5 @@
 var {calculate_fitness} = require('./fitness.js')
+var {log_informations, generate_random_chromosome, is_the_chromosome_valid, initial_generation} = require('./initial_generation.js')
 
 var medians = [
   {x: 2, y: 4, c: 100},
@@ -19,43 +20,11 @@ var demands = [
   {x: 5, y: 5, c: 50},
 ]
 
-var total_capacities = 0
-console.log(`medians: ${medians.length}:`)
-for(var i=0; i<medians.length; i++){
-  console.log(`${i}: loc(${medians[i].x},${medians[i].y}) => c(${medians[i].c})`)
-  total_capacities += medians[i].c
-}
-console.log(`total capacities: ${total_capacities}`)
-
-console.log('============================================')
-var total_needs = 0
-console.log(`demands: ${demands.length}:`)
-for(var i=0; i<demands.length; i++){
-  console.log(`${i}: loc(${demands[i].x},${demands[i].y}) => c(${demands[i].c})`)
-  total_needs += demands[i].c
-}
-console.log(`total capacities: ${total_needs}`)
-
-var generate_random_chromosome = (p, n) => {
-  var chromosome = []
-  for(var i=0; i<n; i++)
-    chromosome[i] = parseInt(Math.random() * p)
-  return chromosome
-}
-
-var is_the_chromosome_valid = (chromosome, medians, demands) => {
-  var needs = []
-  for(var i=0; i<medians.length; i++)
-    needs[i] = 0
-  for(var i=0; i<chromosome.length; i++)
-    needs[chromosome[i]] += demands[i].c
-  console.log(needs)
-  for(var i=0; i<needs.length; i++)
-    if(needs[i] > medians[i].c)
-      return false
-  return true
-}
+log_informations(medians, demands)
 chromosome = generate_random_chromosome(medians.length, demands.length)
 console.log(`chromsome: ${chromosome}`)
 is_valid = is_the_chromosome_valid(chromosome, medians, demands)
 console.log(`chromosome is valid: ${is_valid}`)
+
+var generation = initial_generation(medians, demands, 1000)
+console.log(`generation initialized: ${generation.length}`)
